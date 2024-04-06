@@ -2,17 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LevelSO : MonoBehaviour
+[CreateAssetMenu(fileName = "Level", menuName = "ScriptableObjects/Level")]
+public class LevelSO : ScriptableObject
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public int Index;
+    public int Size;
+    public int MaxMoves;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public int RedBallsRequired;
+    public int GreenBallsRequired;
+    public int BlueBallsRequired;
+    public int PurpleBallsRequired;
+    public int OrangeBallsRequired;
+
 }
