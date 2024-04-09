@@ -31,7 +31,6 @@ public class BallOperator : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
         _levelOperator = levelOperator;
         _ballType = type;
         _ballImage.sprite = _ballType.BallSprite;
-        _lineRenderer = GetComponent<LineRenderer>();
     }
 
     public void LinkFromThisBall()
