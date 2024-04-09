@@ -26,7 +26,9 @@ public class LevelOperator : MonoBehaviour
     private BallType _purpleB;
     #endregion
 
-
+    #region Ball link
+    public List<BallOperator> LinkedBalls;
+    #endregion
 
     private void Start()
     {
@@ -44,10 +46,18 @@ public class LevelOperator : MonoBehaviour
             BallOperator newBall = GameObject.Instantiate(_ballPrefab, _gridTransform.transform).GetComponent<BallOperator>();
 
             int rdmColor = UnityEngine.Random.Range(0, 4);
-            newBall.Init(ballTypes[rdmColor]);
+            newBall.Init(ballTypes[rdmColor], this);
 
         }
 
+    }
+
+    public void StartNewLink(BallOperator firstBall)
+    {
+        LinkedBalls = new List<BallOperator>();
+        LinkedBalls.Add(firstBall);
+
+        firstBall.LinkFromThisBall();
     }
 
     [Serializable]
