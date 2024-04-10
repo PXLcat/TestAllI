@@ -1,8 +1,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
+using static UnityEditor.Progress;
 
 public class LevelOperator : MonoBehaviour
 {
@@ -28,8 +32,10 @@ public class LevelOperator : MonoBehaviour
 
     #region Ball link
     public List<BallOperator> LinkedBalls;
+    public float LinkSize = 10f;
     #endregion
 
+    private List<BallOperator> _allBalls;
     private void Start()
     {
         Init();
@@ -38,15 +44,25 @@ public class LevelOperator : MonoBehaviour
     [ContextMenu("Init")]
     public void Init()
     {
+        _allBalls = new List<BallOperator>();
         BallType[] ballTypes = new BallType[5] { _redB , _greenB, _blueB, _orangeB, _purpleB };
 
         _gridTransform.sizeDelta = new Vector2(_levelData.Size * 120, _levelData.Size * 120);
-        for (int i = 0; i < _levelData.Size* _levelData.Size; i++)
+        for (int i = 0; i < _levelData.Size; i++)
         {
-            BallOperator newBall = GameObject.Instantiate(_ballPrefab, _gridTransform.transform).GetComponent<BallOperator>();
+            for (int j = 0; j < _levelData.Size; j++)
+            {
+                BallOperator newBall = GameObject.Instantiate(_ballPrefab, _gridTransform.transform).GetComponent<BallOperator>();
 
-            int rdmColor = UnityEngine.Random.Range(0, 4);
-            newBall.Init(ballTypes[rdmColor], this);
+                int rdmColor = UnityEngine.Random.Range(0, 4);
+                newBall.Init(ballTypes[rdmColor], this);
+
+                newBall.XCoord = j;
+                newBall.YCoord = _levelData.Size - i - 1;
+
+                _allBalls.Add(newBall);
+            }
+
 
         }
 
@@ -59,6 +75,68 @@ public class LevelOperator : MonoBehaviour
 
         firstBall.LinkFromThisBall();
     }
+
+    public void AddToLink(BallOperator newBall)
+    {
+        if (LinkedBalls == null || LinkedBalls.Count == 0)
+        {
+            return;
+        }
+
+        if (((Math.Abs(LinkedBalls[LinkedBalls.Count - 1].XCoord - newBall.XCoord) > 1))
+            || (Math.Abs(LinkedBalls[LinkedBalls.Count - 1].YCoord - newBall.YCoord) > 1))
+        {
+            return;
+        }
+
+
+        if (!LinkedBalls.Contains(newBall) 
+            && (LinkedBalls[0].BallType.ColorType == newBall.BallType.ColorType))
+        {
+            newBall.LinkFromThisBall();
+            LinkedBalls[LinkedBalls.Count - 1].IsLastOfLink = false;
+            LinkedBalls[LinkedBalls.Count - 1].AdjustLine(newBall.transform.position);
+            LinkedBalls.Add(newBall);
+        }
+        
+    }
+
+    private void Update()
+    {
+        if (Input.GetMouseButtonUp(0))
+        {
+            if (LinkedBalls.Count>2)
+            {
+                foreach (var ballToDelete in LinkedBalls)
+                {
+                    ballToDelete.Validate();
+                    if (ballToDelete.YCoord != _levelData.Size-1)
+                    {
+                        //descendre les balles au dessus
+                        foreach (var item2 in _allBalls.Where(b => ((b.XCoord == ballToDelete.XCoord) && (b.YCoord > ballToDelete.YCoord))))
+                        {
+                            Debug.Log($"forea"); 
+                            int count = LinkedBalls.Count((b2 => (b2.XCoord == ballToDelete.XCoord) && (b2.YCoord < item2.YCoord)));
+                            item2.LowerCells(count/*, ballToDelete*/);
+                            _allBalls.First(b => ((b.XCoord == ballToDelete.XCoord) && (b.YCoord == ballToDelete.YCoord)));
+                        }
+                        
+                        
+                    }
+                }
+            }
+
+            foreach (var item in LinkedBalls)
+            {
+                Debug.Log($"GetMouseButtonUp");
+                item.Unlink();
+
+            }
+            LinkedBalls = new List<BallOperator>();
+        }
+        
+    }
+
 
     [Serializable]
     public struct BallType
