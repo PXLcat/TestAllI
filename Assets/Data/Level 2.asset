@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b44da100c1623fa48ae419b31334cf41, type: 3}
+  m_Name: Level 2
+  m_EditorClassIdentifier: 
+  Index: 2
+  Size: 6
+  MaxMoves: 10
+  RedBallsRequired: 3
+  GreenBallsRequired: 3
+  BlueBallsRequired: 3
+  PurpleBallsRequired: 3
+  OrangeBallsRequired: 0
