@@ -35,7 +35,28 @@ public class LevelOperator : MonoBehaviour
     public float LinkSize = 10f;
     #endregion
 
+    #region Screen size adjustment
+    public RenderTexture rt;
+    public Camera lineRenderCamera;
+    public RawImage ri;
+    public CanvasScaler cs;
+    #endregion
+
     private List<BallOperator> _allBalls;
+
+    private void Awake()
+    {
+        rt.Release();
+        rt.width = Screen.width;
+        rt.height = Screen.height;
+        rt.Create();
+        Debug.Log(lineRenderCamera.targetTexture);
+        cs.referenceResolution = new Vector2(Screen.width, Screen.height);
+        lineRenderCamera.orthographicSize = Screen.height/2;
+        ri.SetNativeSize();
+         
+    }
+
     private void Start()
     {
         Init();
