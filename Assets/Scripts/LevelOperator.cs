@@ -126,14 +126,15 @@ public class LevelOperator : MonoBehaviour
         Debug.Log(lineRenderCamera.targetTexture);
         cs.referenceResolution = new Vector2(Screen.width, Screen.height);
         lineRenderCamera.orthographicSize = Screen.height / 2;
-        ri.SetNativeSize();
+
+        //ri.SetNativeSize();
+        ri.rectTransform.sizeDelta = new Vector2(ri.texture.width, ri.texture.height);
         #endregion         
     }
 
     private void Start()
     {
         Init();
-
     }
 
     [ContextMenu("Init")]
