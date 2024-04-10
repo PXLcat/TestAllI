@@ -73,12 +73,16 @@ public class LevelOperator : MonoBehaviour
     GoalItemManager greenG;
     GoalItemManager purpleG;
     GoalItemManager orangeG;
+
+    int _movesLeft;
     #endregion
 
     private void Awake()
     {
         _levelData = _dataManager.CurrentLevel;
+        _movesLeft = _levelData.MaxMoves;
         #region UI setup
+        _movesText.text = _movesLeft.ToString();
         _allGoalItemsManager = new List<GoalItemManager>();
         //crade mais pas ltime
         if (_levelData.RedBallsRequired>0)
@@ -284,13 +288,22 @@ public class LevelOperator : MonoBehaviour
                 }
                 if (_allGoalItemsManager.All(g => g.BallsNeeded == 0))
                 {
-                    _gameGraphicRaycaster.enabled = false;
+                    WinGame();
+                }
+                else
+                {
+                    _movesLeft--;
+                    _movesText.text = _movesLeft.ToString();
+                    if (_movesLeft == 0 )
+                    {
+                        LooseGame();
+                    }
+
                 }
             }
 
             foreach (var item in LinkedBalls)
             {
-                Debug.Log($"GetMouseButtonUp");
                 item.Unlink();
 
             }
@@ -298,7 +311,18 @@ public class LevelOperator : MonoBehaviour
         }
         
     }
-
+    [ContextMenu("Win")]
+    public void WinGame()
+    {
+        _gameGraphicRaycaster.enabled = false;
+        _winMenu.Show();
+    }
+    [ContextMenu("Loose")]
+    public void LooseGame()
+    {
+        _gameGraphicRaycaster.enabled = false;
+        _looseMenu.Show();
+    }
 
     [Serializable]
     public struct BallType

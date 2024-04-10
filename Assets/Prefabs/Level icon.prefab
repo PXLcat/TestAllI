@@ -110,6 +110,7 @@ GameObject:
   - component: {fileID: 6696287027412152188}
   - component: {fileID: 3450601606202056445}
   - component: {fileID: 6557402402509751588}
+  - component: {fileID: 5902169129567012426}
   m_Layer: 5
   m_Name: Level icon
   m_TagString: Untagged
@@ -219,7 +220,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 6696287027412152188}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 5902169129567012426}
+        m_TargetAssemblyTypeName: NavigationButtonBehaviour, Assembly-CSharp
+        m_MethodName: GoToGameplayScene
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &6557402402509751588
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -236,3 +249,17 @@ MonoBehaviour:
   m_MaskInteraction: 85
   m_UseStencil: 1
   m_RaycastFilter: 0
+--- !u!114 &5902169129567012426
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6696287027412152186}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3447a50b541b4434481e5ca311248504, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _dataManagerSO: {fileID: 11400000, guid: dab60a2cf22c9024d851c3fb857a53b3, type: 2}
+  _levelSO: {fileID: 0}

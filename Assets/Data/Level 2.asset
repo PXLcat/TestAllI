@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Index: 2
   Size: 6
-  MaxMoves: 10
+  MaxMoves: 12
   RedBallsRequired: 3
   GreenBallsRequired: 3
   BlueBallsRequired: 3
