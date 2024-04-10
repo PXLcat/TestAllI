@@ -31,7 +31,10 @@ public class BallOperator : MonoBehaviour, IPointerDownHandler, IPointerEnterHan
     public LineRenderer _lineRenderer;
     public Vector2 _lineDestination;
 
+    public Vector2 InitialImagePosition;
+    public bool Deleted;
 
+    private bool HasAnActiveTween;
     public void Init(BallType type, LevelOperator levelOperator)
     {
         _levelOperator = levelOperator;
@@ -39,6 +42,7 @@ public class BallOperator : MonoBehaviour, IPointerDownHandler, IPointerEnterHan
         _ballImage.sprite = BallType.BallSprite;
 
         _hoverOnBall.LevelOperator = levelOperator;
+        InitialImagePosition = _ballImage.transform.position;
     }
 
     public void LinkFromThisBall()
@@ -96,21 +100,54 @@ public class BallOperator : MonoBehaviour, IPointerDownHandler, IPointerEnterHan
         _lineRenderer.SetPosition(1, nextBallPosition);
     }
 
-    internal void Validate()
+    internal void Validate(BallType newRandomColor)
     {
         Vector2 initialPos = _ballImage.transform.position;
+        HasAnActiveTween = true;
         _ballImage.transform.DOMoveY(initialPos.y - 10, 0.25f).OnComplete(() =>
         {
-            _ballImage.DOFade(0,2).SetEase(Ease.OutCubic);
             _ballImage.transform.DOMoveY(initialPos.y + 200, 0.75f).SetEase(Ease.OutCubic);
+            _ballImage.DOFade(0,0.8f).SetEase(Ease.OutCubic).OnComplete(() =>
+            {
+                ResetColor(newRandomColor);
+            });
         });
+        Deleted= true;
     }
 
     internal void LowerCells(float cells)
     {
-        Vector2 initialPos = _ballImage.transform.position;
-        _ballImage.color = Color.black;
-        _ballImage.transform.DOMoveY(initialPos.y- 120*cells, 2).SetEase(Ease.InCubic);
+        //Debug.Log($"LowerCells aaa");
+        //Vector2 initialPos = _ballImage.transform.position;
+        //_ballImage.color = Color.black;
+        //HasAnActiveTween = true;
+        //_ballImage.transform.DOMoveY(initialPos.y - 120 * cells, 0.0f).SetEase(Ease.InCubic).OnComplete(() =>
+        //{
+        //    HasAnActiveTween = false;
+        //});
+
+    }
+
+    internal void ResetColor(BallType ballType)
+    {
+        BallType = ballType;
+        _ballImage.rectTransform.anchoredPosition = Vector2.zero;
+        _ballImage.sprite = ballType.BallSprite;
+        _ballImage.color = Color.white;
+    }
+    public IEnumerator ResetAfterAnim(BallType ballType)
+    {
+        Debug.Log($"ResetAfterAnim aaa");
+        yield return StartCoroutine(WaitForTweens());
+        //BallType = ballType;
+        //_ballImage.rectTransform.position = Vector2.zero;
+        //_ballImage.sprite = ballType.BallSprite;
+        //_ballImage.color = Color.white;
+        
+    }
+    IEnumerator WaitForTweens()
+    {
+        yield return new WaitUntil(() => !HasAnActiveTween);
 
     }
 }
