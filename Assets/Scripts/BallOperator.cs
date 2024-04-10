@@ -68,8 +68,8 @@ public class BallOperator : MonoBehaviour, IPointerDownHandler, IPointerEnterHan
             Vector2 direction = distance.normalized;
             //Debug.Log($"x {direction.x} y {direction.y}");
             Vector2 linkDestination = ((Vector2)this.transform.position + direction 
-                * new Vector2(System.Math.Min(distance.Abs().x ,_levelOperator.LinkSize), 
-                System.Math.Min(distance.Abs().y, _levelOperator.LinkSize)));
+                * new Vector2(System.Math.Min(Math.Abs(distance.x) ,_levelOperator.LinkSize), 
+                System.Math.Min(Math.Abs(distance.y), _levelOperator.LinkSize)));
             _lineRenderer.SetPosition(IndexInLink+1, linkDestination);
 
         }

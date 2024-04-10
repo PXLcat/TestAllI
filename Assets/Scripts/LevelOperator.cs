@@ -7,7 +7,6 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
-using static UnityEditor.Progress;
 
 public class LevelOperator : MonoBehaviour
 {
@@ -134,6 +133,7 @@ public class LevelOperator : MonoBehaviour
     private void Start()
     {
         Init();
+
     }
 
     [ContextMenu("Init")]
