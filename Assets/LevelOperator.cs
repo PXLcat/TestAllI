@@ -18,6 +18,8 @@ public class LevelOperator : MonoBehaviour
     private GameObject _ballPrefab;
 
     #region Ball Types
+    BallType[] _ballTypes;
+
     [SerializeField]
     private BallType _redB;
     [SerializeField]
@@ -66,7 +68,7 @@ public class LevelOperator : MonoBehaviour
     public void Init()
     {
         _allBalls = new List<BallOperator>();
-        BallType[] ballTypes = new BallType[5] { _redB , _greenB, _blueB, _orangeB, _purpleB };
+        _ballTypes = new BallType[5] { _redB , _greenB, _blueB, _orangeB, _purpleB };
 
         _gridTransform.sizeDelta = new Vector2(_levelData.Size * 120, _levelData.Size * 120);
         for (int i = 0; i < _levelData.Size; i++)
@@ -76,7 +78,7 @@ public class LevelOperator : MonoBehaviour
                 BallOperator newBall = GameObject.Instantiate(_ballPrefab, _gridTransform.transform).GetComponent<BallOperator>();
 
                 int rdmColor = UnityEngine.Random.Range(0, 4);
-                newBall.Init(ballTypes[rdmColor], this);
+                newBall.Init(_ballTypes[rdmColor], this);
 
                 newBall.XCoord = j;
                 newBall.YCoord = _levelData.Size - i - 1;
@@ -128,9 +130,14 @@ public class LevelOperator : MonoBehaviour
         {
             if (LinkedBalls.Count>2)
             {
+                List<int> columnsImpacted = new List<int>();
                 foreach (var ballToDelete in LinkedBalls)
                 {
-                    ballToDelete.Validate();
+                    ballToDelete.Validate(_ballTypes[UnityEngine.Random.Range(0, 4)]);
+                    if (!columnsImpacted.Contains(ballToDelete.YCoord))
+                    {
+                        columnsImpacted.Add(ballToDelete.YCoord);
+                    }
                     if (ballToDelete.YCoord != _levelData.Size-1)
                     {
                         //descendre les balles au dessus
@@ -138,12 +145,22 @@ public class LevelOperator : MonoBehaviour
                         {
                             Debug.Log($"forea"); 
                             int count = LinkedBalls.Count((b2 => (b2.XCoord == ballToDelete.XCoord) && (b2.YCoord < item2.YCoord)));
-                            item2.LowerCells(count/*, ballToDelete*/);
-                            _allBalls.First(b => ((b.XCoord == ballToDelete.XCoord) && (b.YCoord == ballToDelete.YCoord)));
-                        }
-                        
-                        
+                            BallOperator ballToReplace = 
+                                _allBalls.First(b => ((b.XCoord == ballToDelete.XCoord) && (b.YCoord == ballToDelete.YCoord)));
+                            item2.LowerCells(count);
+                            
+                        }                 
                     }
+                }
+                List<BallOperator> ballsFromColumnsImpacted = _allBalls.Where(b => columnsImpacted.Contains(b.YCoord)).ToList();
+                foreach (var ballToFall in ballsFromColumnsImpacted)
+                {
+                    int floors = ballsFromColumnsImpacted.Count(b => (b.Deleted && (b.YCoord < ballToFall.YCoord)));
+                    if (floors > 0)
+                    {
+                        ballsFromColumnsImpacted.First(b3 => b3.YCoord == ballToFall.YCoord).ResetColor(ballToFall.BallType);
+                    }
+                    //w84tween
                 }
             }
 
